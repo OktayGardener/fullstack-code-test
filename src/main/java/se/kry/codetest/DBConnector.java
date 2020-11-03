@@ -7,6 +7,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.SQLClient;
+import java.time.Instant;
 
 public class DBConnector {
 
@@ -46,6 +47,28 @@ public class DBConnector {
     });
     return queryResultFuture;
   }
+
+  public Future<ResultSet> getServices() {
+    return this.query("SELECT * FROM service");
+  }
+
+  public Future<ResultSet> createService(JsonObject jsonBody) {
+    return this.query("INSERT INTO service VALUES ('" + jsonBody.getValue("url") + "','" +
+            jsonBody.getValue("service") + "','" + Instant.now().getEpochSecond() + "','" + jsonBody.getValue("name") + "')");
+  }
+
+  public Future<ResultSet> updateService(JsonObject json) {
+    return this.query("UPDATE service SET url=?, name =? WHERE url=?'",
+            new JsonArray()
+                    .add(json.getString("newURL") != null ? json.getString("newURL") : json.getString("url"))
+                    .add("newName")
+                    .add(json.getString("url")));
+  }
+
+  public Future<ResultSet> deleteService(String url) {
+    return this.query("DELETE FROM service WHERE url = '" + url + "'");
+  }
+
 
 
 }
