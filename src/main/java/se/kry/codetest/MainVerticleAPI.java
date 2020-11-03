@@ -15,9 +15,8 @@ import java.util.List;
 public class MainVerticleAPI extends AbstractVerticle {
 
   private List<JsonObject> services = new ArrayList<>();
-  //TODO use this
   private DBConnector connector;
-  private BackgroundPoller poller = new BackgroundPoller(vertx);
+  private BackgroundPoller poller = new BackgroundPoller();
 
   @Override
   public void start(Future<Void> startFuture) {
@@ -25,7 +24,7 @@ public class MainVerticleAPI extends AbstractVerticle {
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
 
-    vertx.setPeriodic(1000 * 60, timerId -> poller.pollServices(services));
+    vertx.setPeriodic(1000 * 60, timerId -> poller.pollServices(services, vertx));
     setRoutes(router);
 
     vertx
@@ -50,11 +49,43 @@ public class MainVerticleAPI extends AbstractVerticle {
 
     router.post("/service").handler(req -> {
       JsonObject jsonBody = req.getBodyAsJson();
-//      services.add(jsonBody.getString("url"), "name");
-      req.response()
-          .putHeader("content-type", "text/plain")
-          .end("OK");
+      createService(jsonBody);
+      req.response().putHeader("content-type", "text/plain").end("OK");
+      getServices();
     });
+
+    router.put("/service").handler(req -> {
+      JsonObject jsonBody = req.getBodyAsJson();
+      updateService(jsonBody);
+      req.response().putHeader("content-type", "text/plain").end("OK");
+      getServices();
+    });
+
+    router.delete("/service/:serviceName").handler(req -> {
+      deleteService(req.pathParam("url"));
+      req.response().putHeader("content-type", "text/plain").end("OK");
+      getServices();
+    });
+  }
+
+
+  public void createService(JsonObject json) {
+    connector.createService(json);
+  }
+
+  public void getServices() {
+    connector.getServices().setHandler(done -> {
+      services.clear();
+      services.addAll(done.result().getRows());
+    });
+  }
+
+  public void updateService(JsonObject json) {
+    connector.updateService(json);
+  }
+
+  public void deleteService(String url) {
+    connector.deleteService(url);
   }
 
 }
