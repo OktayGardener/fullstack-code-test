@@ -25,8 +25,11 @@ class AddEditForm extends React.Component {
     })
       .then(response => response.json())
       .then(this.props.toggle())
+      .then(window.location.reload(false))
       .then(item => {
-      	this.props.addItemToState(item[0])
+      	console.log(item)
+      	console.log(this.props.item)
+      	this.props.addItemToState(item)
       	this.props.toggle()
       })
       .catch(err => console.log(err))
@@ -46,9 +49,10 @@ class AddEditForm extends React.Component {
     })
       .then(response => response.json())
       .then(this.props.toggle())
+      .then(window.location.reload(false))
       .then(item => {
       	console.log(item)
-          this.props.updateState(item[0])
+          this.props.updateState(item)
           this.props.toggle()
       })
       .catch(err => console.log(err))
@@ -70,7 +74,7 @@ class AddEditForm extends React.Component {
           <Input type="text" name="name" id="name" onChange={this.onChange} value={this.state.name === null ? '' : this.state.name}  />
         </FormGroup>
         <FormGroup>
-          <Label for="email">URL</Label>
+          <Label for="url">URL</Label>
           <Input type="text" name="url" id="url" onChange={this.onChange} value={this.state.url === null ? '' : this.state.url}  />
         </FormGroup>
         <Button>Submit</Button>

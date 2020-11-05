@@ -75,10 +75,11 @@ public class MainVerticleAPI extends AbstractVerticle {
 
     router.delete("/service/:name").handler(req -> {
     	String name = req.request().getParam("name");
-		LOGGER.info("DELETE request for url: " + name);
+		LOGGER.info("DELETE request for name: " + name);
     	mainVerticle.deleteService(name);
     	req.response().putHeader("content-type", "application/text").end("OK");
     	services = mainVerticle.getServices(services);
+		poller.pollServices(services, vertx);
     });
   }
 

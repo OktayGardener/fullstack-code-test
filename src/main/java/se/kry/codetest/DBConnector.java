@@ -72,7 +72,7 @@ public class DBConnector {
   private String checkURL(String url) {
   	if(url.startsWith("www.")) {
   		url = "http://" + url;
-  	} else if(!url.startsWith("www.") || !url.startsWith("http://")) {
+  	} else if(!url.startsWith("www.") && !url.startsWith("http://")) {
   		url = "http://www." + url;
   	}
   	return url;

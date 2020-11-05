@@ -14,6 +14,7 @@ class DataTable extends Component {
       },
     })
       .then(response => response.json())
+      .then(window.location.reload(false))
       .then(id => {
         this.props.deleteItemFromState(id)
         console.log(id)
@@ -36,7 +37,7 @@ class DataTable extends Component {
             <div style={{width:"110px"}}>
               <ModalForm buttonLabel="Edit" item={item} updateState={this.props.updateState}/>
               {' '}
-              <Button color="danger" onClick={() => this.deleteItem(item.name)}>Del</Button>
+              <Button color="danger" onClick={() => this.deleteItem(item.name) }>Del</Button>
             </div>
           </td>
         </tr>

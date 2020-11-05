@@ -17,29 +17,35 @@ class App extends Component {
       .catch(err => console.log(err))
   }
 
+  statusNone(){
+  	if(this.items[0].status == "") {
+		return true
+  	}
+  	return false
+  }
+
   addItemToState = (item) => {
   	this.getItems()
     this.setState(prevState => ({
       items: this.items
     }))
+    window.location.reload(false);
   }
 
   updateState = (item) => {
-    const itemIndex = this.state.items.findIndex(data => data.id === item.id)
-    const newArray = [
-    // destructure all items from beginning to the indexed item
-      ...this.state.items.slice(0, itemIndex),
-    // add the updated item to the array
-      item,
-    // add the rest of the items to the array from the index after the replaced item
-      ...this.state.items.slice(itemIndex + 1)
-    ]
-    this.setState({ items: newArray })
+	console.log(item)
+    this.getItems()
+    this.setState({ items: this.items })
+    window.location.reload(false);
   }
 
   deleteItemFromState = (name) => {
+  	while (this.statusNone) {
   	this.getItems()
-//    const updatedItems = this.state.items.filter(item => item.name !== name)
+  	window.location.reload(false);
+  	console.log('getting items')
+  	}
+
     this.setState({ items: this.state.items })
   }
 
