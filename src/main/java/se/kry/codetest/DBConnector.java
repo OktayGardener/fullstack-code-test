@@ -52,23 +52,34 @@ public class DBConnector {
     return this.query("SELECT * FROM service");
   }
 
-  public Future<ResultSet> createService(JsonObject jsonBody) {
-    return this.query("INSERT INTO service VALUES ('" + jsonBody.getValue("url") + "','" +
-            jsonBody.getValue("service") + "','" + Instant.now().getEpochSecond() + "','" + jsonBody.getValue("name") + "')");
+  public Future<ResultSet> createService(JsonObject json) {
+  	String url = json.getValue("url").toString();
+  	url = checkURL(url);
+  	return this.query("INSERT INTO service VALUES ('" + url + "','" + json.getValue("name") + "','" + Instant.now().getEpochSecond() + "')");
   }
 
   public Future<ResultSet> updateService(JsonObject json) {
-    return this.query("UPDATE service SET url=?, name =? WHERE url=?'",
-            new JsonArray()
-                    .add(json.getString("newURL") != null ? json.getString("newURL") : json.getString("url"))
-                    .add("newName")
-                    .add(json.getString("url")));
+    return this.query("UPDATE service SET url = '" + json.getValue("url") + "'" + " WHERE name='" + json.getValue("name") + "'");
   }
 
-  public Future<ResultSet> deleteService(String url) {
-    return this.query("DELETE FROM service WHERE url = '" + url + "'");
+  public Future<ResultSet> deleteService(String name) {
+  	name = checkSqlInjection(name);
+  	System.out.println("DELETE FROM service WHERE name = '" + name + "'");
+    return this.query("DELETE FROM service WHERE name = '" + name + "'");
   }
 
 
+  private String checkURL(String url) {
+  	if(url.startsWith("www.")) {
+  		url = "http://" + url;
+  	} else if(!url.startsWith("www.") || !url.startsWith("http://")) {
+  		url = "http://www." + url;
+  	}
+  	return url;
+  }
+
+  private String checkSqlInjection(String param) {
+  	return param == null ? null : param.replace(";", "");
+  }
 
 }
