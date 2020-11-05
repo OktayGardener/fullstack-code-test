@@ -64,7 +64,6 @@ public class DBConnector {
 
   public Future<ResultSet> deleteService(String name) {
   	name = checkSqlInjection(name);
-  	System.out.println("DELETE FROM service WHERE name = '" + name + "'");
     return this.query("DELETE FROM service WHERE name = '" + name + "'");
   }
 
