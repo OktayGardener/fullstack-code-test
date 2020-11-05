@@ -41,4 +41,20 @@ New -> New from existing sources -> Import project from external model -> Gradle
 You can also run gradle directly from the command line:
 ```
 ./gradlew clean run
+
+
+
+# Instructions
+API Can be called
+
 ```
+ curl  --request GET http://localhost:8080/service/
+curl --header "Content-Type: application/json"   --request POST   --data '{"url":"www.gmail.com","name":"gmail"}'   http://localhost:8080/service
+```
+
+etc...
+
+To run frontend, run `npm install` then `npm start`.
+First time trying out ReactJS, and there are bugs, didn't have time to fix everything.
+
+
