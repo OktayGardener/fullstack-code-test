@@ -37,8 +37,4 @@ public class BackgroundPoller {
     System.out.println(services);
     return Future.succeededFuture();
   }
-
-
-
-
 }
