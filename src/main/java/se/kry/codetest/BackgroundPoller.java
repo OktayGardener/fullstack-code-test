@@ -24,7 +24,7 @@ public class BackgroundPoller {
     WebClient client = WebClient.create(vertx);
     for(JsonObject service : services) {
       String url = (String)service.getValue("url");
-      LOGGER.info("Trying to poll %s", url);
+      LOGGER.info("Polling "  + url);
       client.getAbs(url).send(ar -> {
         if (ar.succeeded()) {
           service.put(STATUS, OK);
@@ -34,7 +34,8 @@ public class BackgroundPoller {
         }
       });
     }
-    return Future.succeededFuture(services);
+    System.out.println(services);
+    return Future.succeededFuture();
   }
 
 
